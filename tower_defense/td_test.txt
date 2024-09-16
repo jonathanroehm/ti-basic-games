@@ -1,0 +1,261 @@
+ClrHome
+"==============
+"DATA
+"==============
+"Game Board
+DelVar [A]{10,26}→dim([A])
+
+"Manually Coded Path 
+"Y,X Coordinate Pairs
+{5,1,5,2,5,3,5,4,4,4,3,4,3,5,3,6,
+ 4,6,5,6,5,7,5,8,5,9,6,9...}→ʟPYX
+
+"Manually Coded Tower Y,X Pairs
+{4,5,6,10,4,15,6,20,4,25}→ʟTYX
+
+"Total Mob Wave
+{3.25,3.25,3.25,3.25,3.25,3.25}→ʟWAVE
+
+"Text Sprites
+"+TM*"→Str1
+
+"Data Keeper
+DelVar ʟDATA(3)→dim(ʟDATA)
+  "Data:
+  "ʟDATA(1): Count of released mobs
+  "ʟDATA(2): Tower Damage
+  "ʟDATA(3): Ticks
+
+2→ʟDATA(2)
+
+"Active Paths
+DelVar ʟAP(1)→dim(ʟAP)
+
+"==============
+"GAME SETUP
+"==============
+"Add Towers
+0→I
+For(A,1,dim(ʟTYX),2)
+  I+1→I
+  ʟTYX(A)→Y
+  ʟTYX(A)→X
+  
+  "Store Encoded Tower
+  "Ex: 2.01 at [A](Y,X)
+  2+Iᴇ⁻2→[A](Y,X)
+End:"/For(A...
+
+"Add Path
+0→I
+For(A,1,dim(ʟPYX),2)
+  0→T:"Reset Detected Tower
+  I+1→I
+  ʟPYX(A)→Y
+  ʟPYX(A)→X
+  
+  "Detect Touching Towers:
+  "If a tower is found, store it to T
+  "for updating path encoding later
+  For(B,Y-1,Y+1):For(C,X-1,X+1)
+    "Prevent scanning outside of the matrix
+    If B>0 and C>0 and B<11 and C<27:Then
+      [A](B,C)→Z
+      If int(Z)=2
+      int(fPart(Z)ᴇ2→T
+    End:"/If B>0...
+  End:End:"/For(B For(C
+  
+  "Encode & Store Path:
+  1+Iᴇ⁻2+Tᴇ⁻4→[A](Y,X)
+
+End:"/For(A...
+
+"Render Game
+For(A,1,10):For(B,1,26)
+  [A](A,B)→Z
+  If Z
+    Output(A,B,sub(Str,int(Z),1))
+End:End:"/For(A For(B
+
+"Add First Mob"
+"Create Active Mob List"
+DelVar ʟAM(1)→dim(ʟAM)
+1→ʟDATA(1)
+ʟWAVE(1)→M:"The Mob
+ʟPYX(1)→Y
+ʟPYX(2)→X
+
+"Encode Mob:"
+M+1ᴇ⁻4+1ᴇ⁻6→ʟAM(1)
+
+"Update Path Encoding"
+"(First mob standing on path)"
+[A](Y,X)+1ᴇ⁻6→[A](Y,X)
+
+"Output the mob
+Output(Y,X,sub(Str1,3,1)
+
+"==============
+"TOWER DEFENSE
+"==============
+
+While 1
+ʟDATA(3)+1→ʟDATA(3)
+
+"Release mob?
+"Check if the count of mobs released is less than
+"the size of the ʟWAVE list and see if it's been
+"at least 4 ticks since the last mob release. 
+
+If ʟDATA(1)<dim(ʟWAVE) and not(remainder(ʟDATA(3),4):Then
+  ʟPYX(1)→Y
+  ʟPYX(2)→X
+  
+  "Increment released mob count 
+  ʟDATA(1)+1→ʟDATA(1)
+
+  "Create encoded data for mob index
+  ʟDATA(1)ᴇ⁻6→I
+
+  "Encode path with mob index
+  [A](Y,X)+I→[A](Y,X)
+
+  "Add Encoded Mob to Active Mob List
+  ʟWAVE(ʟDATA(1))→M
+  augment(ʟAM,{M+1ᴇ⁻4})→ʟAM
+
+  "Output Mob on Screen
+  int(M)→M:"Get Object ID
+  Output(Y,X,sub(Str1,M,1)
+End:"/If ʟDATA(1)<dim(ʟWAVE)...
+
+
+"Towers Attack!
+"Occurs before movement
+"Check based on entries in ʟAP
+"Remember: ʟAP's first item is 0 since we don't
+"strip the leading 0 from the list.
+
+"ʟAP Data Model:
+"ʟAP(N): Tower Index
+"ʟAP(N+1): Mob Index
+
+If sum(ʟAP):Then
+
+  "Start at 2 since ʟAP(1)=0
+  For(A,2,dim(ʟAP),2)
+    "Get Mob Index
+    ʟAP(A+1)→I
+
+    "Get Mob from active mob list
+    ʟAM(I)→M
+
+    "Decode Mob Movement Count
+    int(fPart(Mᴇ2)ᴇ2)→C
+
+    "Find Mob Y,X
+    ʟPYX(2C-1)→Y
+    ʟPYX(2C)→X
+
+    "Encode & Save Damage active mob list
+    M-ʟDATA(2)ᴇ⁻2→ʟAM(I)
+    
+    "Output damage sprite
+    Output(Y,X,sub(Str1,4,1)
+
+    "Detect death
+    "if mob value is less than 3, 
+    "The mob has taken more damage than it has HP
+    if ʟAM(I)<3:Then
+      
+      "Set value to 0
+      0→ʟAM(I)
+
+      "Update path encoding to remove mob
+      [A](Y,X)-Iᴇ⁻6→[A](Y,X)
+        
+      "Replace sprite with path
+      Output(Y,X,sub(Str1,1,1))      
+
+    End:"/if ʟAM(I)<3
+  End:"/For(A...
+End:"/If sum(ʟAP)...
+
+
+"Movement
+"and Active Path List building
+"check based on if any active mobs are present
+
+"Erase Active Lists
+"Temporary Tower List
+DelVar ʟAT(1)→dim(ʟAT)
+
+"Active Paths List
+DelVar ʟAP(1)→dim(ʟAP)
+
+If sum(ʟAM):Then
+  For(A,1,dim(ʟAM))
+    ʟAM(A)→M:"Active Mob"
+    
+    "Death = mob value of 0, 
+    "so check if mob is not 0
+    If M:Then
+
+      "Step 1: Remove mob from current path
+
+      "Get Movement Counter
+      int(fPart(Mᴇ2)ᴇ2→C
+
+      "Get Mob Index
+      "(not guaranteed to be A since some 
+      "mobs can be 0 in list, so decode it)
+      int(fPart(Mᴇ4)ᴇ2→I
+
+      "Get Mob Y,X
+      ʟPYX(2C-1)→Y
+      ʟPYX(2C)→X
+
+      "Encode path, removing mob presence
+      [A](Y,X)-Iᴇ⁻6→[A](Y,X)
+
+      "Replace sprite with path
+      Output(Y,X,sub(Str1,int([A](Y,X)),1)
+
+      "Step 2: Move Mob to new path
+      "Increment Move Counter on Mob
+      M+1ᴇ⁻4→ʟAM(A)
+      C+1→C:"Internal move counter updated"
+      
+      "Get Y,X of new location
+      ʟPYX(2C-1)→Y
+      ʟPYX(2C)→X
+
+      "Encode new path with mob presence
+      [A](Y,X)+Iᴇ⁻6→[A](Y,X)
+    
+      "Put mob on new location
+      Output(Y,X,sub(Str1,int(M),1)
+
+      "Step 3: Update active path list
+      "Get Tower index from new path
+      int(fPart([A](Y,X)ᴇ2)ᴇ2))→T
+
+      "Prioritization occurs by picking up
+      "The furthest mob along the track
+      "And ignoring the rest. So this is how we do that:
+      if T and not(sum(T=ʟAT)):Then
+      
+        "Update our temporary active tower list
+        augment(ʟAT,{T})→ʟAT
+
+        "Update active paths list
+        "with tower index (T) and mob index (I)
+        augment(ʟAP,{T,I})→ʟAP
+
+      End:"/if T...
+    End:"/If M
+  End:"/For(A...
+End:"/if sum(ʟAM)...
+
+End:"/While 1
