@@ -3,11 +3,11 @@
 A top down dunegeon crawler where you have one life to live. Defeat all the dungeons and take on the main boss.
 
 * Procedural generation of
-  * Maps
-  * Dungeons
-    * Layout
-    * Enemy placement
-  * Won loot
+ * Maps
+ * Dungeons
+  * Layout
+  * Enemy placement
+ * Won loot
 
 ## The Game Story Overview
 Our hero starts in a town, dungeon access is inside the town (aka: the overworld), via "wells". One can visit all the wells except the main boss dungeon.
