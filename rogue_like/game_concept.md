@@ -3,11 +3,12 @@
 A top down dunegeon crawler where you have one life to live. Defeat all the dungeons and take on the main boss.
 
 * Procedural generation of
- * Maps
- * Dungeons
-  * Layout
-  * Enemy placement
- * Won loot
+  * Maps
+  * Dungeons
+    * Layout
+    * Enemy placement
+  * Won loot
+  * Witch Hut Potion Cost is randomly assigned within a band / range.
 
 ## The Game Story Overview
 Our hero starts in a town, dungeon access is inside the town (aka: the overworld), via "wells". One can visit all the wells except the main boss dungeon.
@@ -59,4 +60,45 @@ After the warrior trial: Learn of worth of defeating the shadow walkers. Sent on
     * Damage scale
     * Enemy Health
     * Traps: quantity, damage dealt, consequences.
+  * Level / Floor of Dungeon
+    * Entrance to the next floor down via stairs
+    * Entrance to a nearby room via a door (same level).
+    * Enemy death is non-permanent
+      * Permanent death only occurs when the shadow walker is defeated
+      * Enemy respawn upon re-entering the room
+      * Every time you defeat an enemy you expand the gold (farming is possible)
+  * Dungeon Boss
+    * Each dungeon has a boss, that boss is the dungeon's "Shadow Walker"
+    * Upon defeat, enemies are zeroed out in the dungeon
+    * Gain access to dungeon loot
+   
+### Player System
+
+#### Inventory Management
+* Seeing inventory
+* How to access and use items from inventory
+
+#### Gold Management
+* Seeing gold
+* How to use gold
+
+#### Stats and Attributes
+* Seeing your stats
+* How stats impact the game
+
+#### Maleffects
+* Poison
+* Fire
  
+### Enemy System
+
+#### Enemy Attributes
+
+#### Enemy Maleffects
+* Dungeon Permanent Maleffects (last until dungeon exit)
+* Temporary Maleffects (tick based)
+
+#### Enemy Intelligence / Aggro
+
+### Bosses
+
