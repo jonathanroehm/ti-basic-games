@@ -75,30 +75,60 @@ After the warrior trial: Learn of worth of defeating the shadow walkers. Sent on
 ### Player System
 
 #### Inventory Management
-* Seeing inventory
-* How to access and use items from inventory
+* Accessing inventory
+  * Cannot access inventory inside dungeon
+  * Can access in "overworld" / town
+  * Equipables
+    * Name
+    * Stat modifiers
+    * Equip / Exit option
+* Won Loot
+  * Will be able to see stats at a glance, when picked up, even if you can't equip it.
 
 #### Gold Management
 * Seeing gold
+  * Gold count always available (e.g. built into UI)
+  * Gold acts as spendable experience points
 * How to use gold
+  * Buy things at the shops / upgrade attributes at shop
 
 #### Stats and Attributes
 * Seeing your stats
-* How stats impact the game
+  * When / Where
+    * Health: always available (like gold)
+    * All other stats are visible from inventory screen - accessible in the overworld
 
 #### Maleffects
-* Poison
-* Fire
+* Types
+  * Poison
+  * Fire
+  * Etc...
+  * Potential Durations:
+    * Tick-based wear off over time
+    * or: Until dungeon exit
  
 ### Enemy System
 
 #### Enemy Attributes
+* Hitpoints
+* Damage
+* Speed
+* Potential to deliver maleffects
 
 #### Enemy Maleffects
 * Dungeon Permanent Maleffects (last until dungeon exit)
 * Temporary Maleffects (tick based)
 
 #### Enemy Intelligence / Aggro
+* Enemies move on the screen
+  * Movement Patterns are mostly random
+* Aggro:
+  * Within unspecified range: move towards you and begin combat when in melee range
 
 ### Bosses
+TBD
+
+---
+
+## Risky Code Bets
 
