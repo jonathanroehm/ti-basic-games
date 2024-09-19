@@ -3,7 +3,6 @@
 A top down dunegeon crawler where you have one life to live. Defeat all the dungeons and take on the main boss.
 
 * Procedural generation of
-  * Maps
   * Dungeons
     * Layout
     * Enemy placement
@@ -128,7 +127,37 @@ After the warrior trial: Learn of worth of defeating the shadow walkers. Sent on
 ### Bosses
 TBD
 
+### Super Awesome Amazing Game Hook: Time Travel
+* You can stop time enyware
+* Unsure but interested in exploring:
+  * Upgrading Time Travel Abilities:
+    * Having more points to use
+    * Having new abilities to apply (e.g. back stab) 
+* Pts
+  * start with 3 pts / low points
+  * spend a point to make a move
+* Execution of time travel plan:
+  * Press a button (maybe Enter) to begin time travel mode / stops time
+  * Draft out your sequence
+  * Sequence is shown to player (eg move move attack attack)
+  * `Enter` to commit / execute
+  * `Clear` to reset
+  * `Mode` to exit (or something similar)
+
 ---
 
 ## Risky Code Bets
-
+1. Aggro (Risk Level: 2/3)
+  * monsters will sense you and come to you
+3. Stats (Risk Level: 3/3)
+   * Tracking stats and making them have an impact (more strength = more damage; attacking removes hit points)
+4. Performant code (it's snappy and fun to play) (Risk Level: 2/3)
+5. Time travel being fun and intuitive (Risk Level: 3/3)
+6. Procedural generation (Risk Level 3/3)
+  * Essence of a roguelike to us
+  * Dungeons
+    * Layout
+    * Enemy placement
+  * Won loot
+7. System storage of items and loot tables that reliably recall item names, stats, and then can be applied to the player when equipped (Risk 2/3)
+8. Tick-based maleffects / debuffs (things that wear off) (Risk level: 2/3)
