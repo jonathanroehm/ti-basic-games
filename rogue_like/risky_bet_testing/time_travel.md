@@ -18,3 +18,27 @@
  
 ---
 
+## What's risky about time travel:
+"Does it work?"
+"Is it fun?"
+
+**Strategy: Make a sample program**
+
+**Questions we want to answer:**
+* Is time travel code performant?
+* Will aura point spending work
+* Does it feel fun and cool?
+* Can we utilize a draft movement plan and then have the game execute it on our behalf.
+
+**Test Concept:**
+1. One screen, player spawns and enemy spawns
+2. Enemy does move (enemy has hitpoints and can be killed)- at death, restart test.
+4. Tick System
+5. Aura - 5 points
+6. Map boundary (very simple map)
+7. Show draft movement plan while time traveling
+8. Abilities: dash (aka: jump), slash (standard attack)
+
+```
+asdf
+```
