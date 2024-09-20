@@ -39,6 +39,48 @@
 7. Show draft movement plan while time traveling
 8. Abilities: dash (aka: jump), slash (standard attack)
 
+---
+
+## Test Concept
+
+### Loop Structure
+Movement -> Time Travel Planning -> Time Travel Execution 
+
+Movement Loop:
+* You move
+* mobs moves
+* tick increment
+* check for player inputs
+
+Time Travel Planning Loop:
+* mobs stop
+* enter planning
+* actions take aura
+* show TT plan
+* cmommit, reset or exit
+
+Time Travel Execution Process
+* execute plan (animated)
+  * see the planned movements occur
+  * see aura spent on a per point basis
+  * if attacking, damage done is shown
+
 ```
-asdf
+Room Loop
+
+  Start Movement Loop
+    Enemy and player are moving
+  End Movement Loop
+  
+  Start Time Travel Planning Loop
+    Enemy stops
+    Player drafts TT plan
+  End Time Travel Planning Loop
+  
+  Start Time Travel Execution Process
+    TT plan is executed
+  End Time Travel Execution Process
+
+  (Restart room loop at "Start Movement Loop")
+End Room Loop
 ```
