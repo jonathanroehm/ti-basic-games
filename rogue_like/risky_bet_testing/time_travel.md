@@ -106,6 +106,9 @@ Room Loop (Main Loop)
 #### Time Travel Planning Loop
 Sent to time travel loop after pressing `[Enter]` in movement loop
 **Starting Aura Points: 10 for test**
+Data to track: 
+* Aura point usage
+* Movements made (movement tracker)
 
 ```
 Time Travel Planning Loop
@@ -114,32 +117,63 @@ Changes: Mobs stop moving, ticks pause, player movement now uses aura points
 ** Walking (1 cell) - up, down, left, right
 *** "TT Ghost" moves to new location
 *** 1 Aura point subtracted
+*** Move is added to move tracker
 *** update aura tracker
 
 ** Dash (2 cells) - Alpha + up, down, left, right
 *** "TT Ghost" Moves 2 cells, can hop over traps
 **** Can go through mobs to end up behind them, but not through walls.
 *** 2 Aura point subtracted
+*** Move is added to move tracker
 *** Upate aura tracker
 
+# do not calculate damage in planning stage
 ** Slash (standard attack)
 *** Attack 1 sq in front - no modifiers for position
-*** damage mob
-**** mob subtracts health
-**** if mob is out of hitpoints: death
 *** 2 aura points subtracted
+*** Move is added to move tracker
 *** update aura tracker
 
+
+# Note: stab performed from behind the mob
+# results in an instant-kill
+# stabs performed from anywhere besides behind: normal stab
 ** Stab (back stab, normal stab)
-*** Modifier:
-**** Is player "behind" mob?
-***** Insta-kill
-***** 4 aura subtracted
-***** Update aura tracker
-**** Is player not "behind" mob?
-***** Regular stab attack
-***** 4 aura subtracted
-***** Update aura tracker
+*** 4 aura subtracted
+*** Move is added to move tracker
+*** Update aura tracker
 ```
 
 #### Time Travel Execution Loop
+Data Available:
+* Movement Tracker
+* Aura
+
+```
+# Goals: execute on the move tracker
+# Do damage when attacking
+# Want the world to absorb the changes made during time travel
+#   when time travel is over
+
+* Read the movement tracker
+** Execute each movement in the tracker
+*** If movement (not attack)
+**** Go from original Y,X position to new Y,X position
+**** Subtract Aura points for real
+*** If attack
+**** Is it a position based attack (e.g. backstab)?
+**** if it is a position based attack:
+***** check for position modifier
+***** Do damage based on true/false position-modifier modifier (e.g insta-kill)
+**** if not a position based attack
+***** do damage
+
+* Mob response
+** when receiving damage:
+*** subtract damage done from hitpoints
+*** if hitpoints ≤ 0
+**** death
+*** if hitpoints > 0
+**** show damage done
+```
+
