@@ -1,0 +1,168 @@
+ClrHome
+
+"------------"
+GAME SETUP
+"------------"
+
+"DATA DEFAULTS
+DelVar ʟDATA(2)→dim(ʟDATA)
+6→ʟDATA(1):"SAFE SPACE DEFAULT
+5→ʟDATA(2):"X VELOCITY
+
+0→L:"LEVEL
+6→M:"MAX CEILING
+ʟDATA(1)→S:"SAFE SPACE USED IN GAME
+ʟDATA(2)→V:"X VELOCITY USED IN GAME
+0→T:"TICKER
+
+DelVar ʟLVL(26)→dim(ʟLVL)
+DelVar ʟFLAG(3)→dim(ʟFLAG)
+
+"FLAG SYSTEM"
+1→ʟFLAG(1):"ACTIVATE MAIN GAME LOOP
+1→ʟFLAG(2):"ACTIVATE LEVEL LOOP
+0→ʟFLAG(3):"ACTIVATE DEATH SEQUENCE
+
+"SPRITE MAP
+"V^>*:"→Str1
+
+"------------"
+"GAME LOOP"
+"------------"
+While ʟFLAG(1)
+  ClrHome
+  L+1→L:"INCREMENT LEVEL
+
+  "DIFFICULTY CURVE ADJUSTMENTS:
+
+  "EVERY 3 LEVELS, DECREASE SAFE SPACE
+  If not(remainder(L,3):Then
+    S-1→S
+    If S<3:3→S:"NO SMALLER THAN 3
+  End
+
+  "EVERY 2 LEVELS, INCREASE X VELOCITY
+  If not(remainder(L,2):Then
+    V-1→V
+    If V<1:1→V:"NO LESS THAN 1"
+  End
+
+  "BUILD LEVEL"
+  "1. PICK RANDOM Y VALUE FOR FIRST CEILING
+  randInt(1,M)→C
+
+  "2. ITERATE 25 TIMES
+  For(X,1,25)
+    C+randInt(-1,1)→C:"MODIFY CEILING HEIGHT
+    If C<M:M→C
+    If C<1:1→C
+    C→ʟLVL(X):"STORE CEILING TO DECISION LIST
+
+    "3. DRAW CEILING FOR THIS COLUMN"
+    For(Y,1,C)
+      Output(Y,X,sub(Str1,1,1)):"OUTPUTS 'V'
+    End:"/Y
+
+    "4. DRAW FLOOR FOR THIS COLUMN"
+    For(Y,C+S,10)
+      Output(Y,X,sub(Str1,2,1):"OUTPUTS '^'
+    End:"/Y
+  End:"/X
+
+  "5. DRAW END OF LEVEL ZONE
+  For(Y,1,10)
+    Output(Y,26,sub(Str1,5,1):"OUTPUTS ':'
+  End
+
+  "RESET VALUES AHEAD OF LEVEL LAUNCH
+  1→X
+  1→ʟFLAG(2):"ENSURE LEVEL LAUNCHES
+  0→T:"RESET COUNTER
+
+  "PLACE PLAYER IN MIDDLE OF SAFE SPACE
+  "ON COLUMN 1
+  int(ʟLVL(1)+(.5S))→Y
+
+  "------------"
+  "LEVEL LOOP"
+  "------------"
+  While ʟFLAG(2)
+    getKey→K
+    T+1→T:"INCREMENT COUNTER
+
+    "ERASE PLAYER PREVIOUS LOCATION
+    If sum(K={25,34})
+    Output(Y,X," ")
+
+    "ADJUST SHIP PITCH VIA UP/DOWN
+    If K=25 and Y>1:Y-1→Y
+    If K=34 and Y<10:Y+1→Y
+
+    "INCREMENT X EVERY 'V' TICKS
+    If not(remainder(T,V)):Then
+      Output(Y,X," "):"ERASE SELF"
+      X+1→X
+    End
+
+    "DETECT COLLISIONS"
+    If X<26:Then
+      If Y≤ʟLVL(X) or Y≥ʟLVL(X)+S:Then
+        0→ʟFLAG(2):"END LEVEL LOOP
+        1→ʟFLAG(3):"ACTIVATE DEATH SEQUENCE
+      End
+    End
+
+    "DETECT VICTORY
+    If X=26:0→ʟFLAG(2)
+
+  End:"/While ʟFLAG(2)
+
+  "------------"
+  "DEATH SEQUENCE"
+  "------------"
+  "SKIP THIS AREA IF YOU BEAT THE LEVEL
+  If ʟFLAG(3):Then
+    For(A,Y,10)
+      Output(A,X,sub(Str1,4,1)):"OUTPUTS '*'
+      Wait 0.15
+    End:"/A
+
+    Wait 0.75
+    ClrHome
+
+    Output(3,8,"GAME OVER!")
+    Output(5,8,"LEVEL:")
+    Output(5,14,L)
+    Output(6,8,"SCORE:")
+    Output(6,14,L*10*26
+    Output(9,6,"[ENTER] RE-TRY")
+    Output(10,5,"[CLEAR] END GAME")
+
+    0→K:"RESET K
+    While ʟFLAG(3)
+      getKey→K
+  
+      "RESET GAME AND SET DEFAULTS
+      If K=105:Then
+        0→L
+        ʟDATA(1)→S
+        ʟDATA(2)→V
+        0→ʟFLAG(3):"END THIS LOOP
+      End:"/105
+
+      "END GAME
+      If K=45:Then
+        0→ʟFLAG(1)
+        0→ʟFLAG(2)
+        0→ʟFLAG(3)
+      End:"/45
+    End:"/While ʟFLAG(3)
+  End:"/If ʟFLAG(3)
+End:"/ʟFLAG(1)
+
+"CLEANUP
+DelVar ʟFLAG
+DelVar ʟLVL
+DelVar ʟDATA
+""→Str1
+ClrHome:""
